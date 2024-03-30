@@ -21,6 +21,11 @@ func NewPostgresDAL(dsn string) (*PostgresDAL, error) {
 	return &PostgresDAL{db: db}, nil
 }
 
+// AutoMigrate creates the necessary tables in PostgreSQL.
+func (dal *PostgresDAL) AutoMigrate() error {
+	return dal.db.AutoMigrate(&models.Student{})
+}
+
 // WriteStudent writes student data to PostgreSQL.
 func (dal *PostgresDAL) WriteStudent(student *models.Student) error {
 	return dal.db.Create(student).Error

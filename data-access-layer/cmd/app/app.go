@@ -9,8 +9,8 @@ import (
 )
 
 // GetDALDriver will initialize the DAL Driver of the respective DB provider.
-func GetDALDriver(dbProvider *string) (dal.DataAccessLayer, error) {
-	switch *dbProvider {
+func GetDALDriver(dbProvider string) (dal.DataAccessLayer, error) {
+	switch dbProvider {
 	case "psql":
 		postgresDAL, err := psql.NewPostgresDAL("postgres://admin:password@localhost:5432/college?sslmode=disable")
 		if err != nil {

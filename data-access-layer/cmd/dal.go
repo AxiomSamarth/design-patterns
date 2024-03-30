@@ -7,12 +7,15 @@ import (
 	"axiomsamarth.io/data-access-layer/cmd/app"
 	"axiomsamarth.io/data-access-layer/pkg/dal"
 	"axiomsamarth.io/data-access-layer/pkg/models"
+
+	"github.com/pkg/errors"
 )
 
 func main() {
-	var dbProvider *string
+	var dbProvider string
 
-	flag.StringVar(dbProvider, "db-provider", "psql", "Specify the name of the DB Provider to use ['psql', 'mongodb']")
+	flag.StringVar(&dbProvider, "db-provider", "psql", "Specify the name of the DB Provider to use ['psql', 'mongodb']")
+	flag.Parse()
 
 	dalDriver, err := app.GetDALDriver(dbProvider)
 	if err != nil {
@@ -36,13 +39,13 @@ func useCollegeControl(cc *dal.CollegeControl) error {
 		Grade: 85,
 	}
 	if err := cc.AddStudent(student); err != nil {
-		return err
+		return errors.Wrap(err, "error adding student")
 	}
 
 	// List all students
 	students, err := cc.ListStudents()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error listing students")
 	}
 	fmt.Println("Students:")
 	for _, s := range students {

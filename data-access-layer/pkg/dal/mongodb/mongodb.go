@@ -5,6 +5,7 @@ import (
 
 	"axiomsamarth.io/data-access-layer/pkg/models"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -20,7 +21,6 @@ func NewMongoDBDAL(uri, dbName, collectionName string) (*MongoDBDAL, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	collection := client.Database(dbName).Collection(collectionName)
 	return &MongoDBDAL{collection: collection}, nil
 }
@@ -34,7 +34,8 @@ func (dal *MongoDBDAL) WriteStudent(student *models.Student) error {
 // ReadStudents reads all student data from MongoDB.
 func (dal *MongoDBDAL) ReadStudents() ([]models.Student, error) {
 	var students []models.Student
-	cursor, err := dal.collection.Find(context.Background(), nil)
+	filter := bson.M{}
+	cursor, err := dal.collection.Find(context.Background(), filter)
 	if err != nil {
 		return nil, err
 	}
